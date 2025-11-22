@@ -1,99 +1,223 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Backend RMS (Restaurant Management System) com NestJS
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+![Badge Licença](https://img.shields.io/badge/license-MIT-blue.svg)
+![Badge NestJS](https://img.shields.io/badge/NestJS-%5E10.0.0-red.svg)
+![Badge Prisma](https://img.shields.io/badge/Prisma-%5E5.0.0-blueviolet.svg)
+![Badge PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue.svg)
+![Badge Jest](https://img.shields.io/badge/Tests-Jest-brightgreen.svg)
+![Badge Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)
+![Badge Kubernetes](https://img.shields.io/badge/Kubernetes-Ready-blue.svg)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<!-- Adicione badges de status do GitHub Actions aqui quando configurado -->
+<!-- ![Badge Build Status](https://github.com/SEU_USUARIO/SEU_REPOSITORIO/actions/workflows/main.yml/badge.svg) -->
 
-## Description
+Backend robusto e escalável para um Sistema de Gerenciamento de Restaurantes (RMS), construído com NestJS e seguindo as melhores práticas de desenvolvimento de software.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## ✨ Visão Geral
 
-## Project setup
+Este projeto implementa o backend para um RMS, fornecendo APIs para gerenciar entidades como clientes, pedidos, pagamentos, etc. A arquitetura foi projetada para ser modular, testável e fácil de manter, utilizando conceitos modernos de engenharia de software e priorizando a facilidade de execução com Docker.
 
-```bash
-$ npm install
+## 🚀 Tecnologias e Conceitos Chave
+
+- **Framework:** [NestJS](https://nestjs.com/) (v10+)
+- **Arquitetura:** [Arquitetura Limpa (Clean Arch)](https://alistair.cockburn.us/hexagonal-architecture/)
+- **Princípios:** [SOLID](https://pt.wikipedia.org/wiki/SOLID)
+- **ORM:** [Prisma](https://www.prisma.io/)
+- **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/)
+- **Testes Unitários:** [Jest](https://jestjs.io/)
+- **Containerização:** [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/) & [Kubernetes](https://kubernetes.io/)
+- **CI/CD:** [GitHub Actions](https://github.com/features/actions)
+- **Design Patterns:** Repository, Factory, Dependency Injection, etc.
+- **Identificadores:** UUID
+- **Soft Delete:** Campo `deletedAt`
+
+## 📋 Pré-requisitos
+
+- [Git](https://git-scm.com/)
+- [Docker](https://www.docker.com/products/docker-desktop/)
+- [Docker Compose](https://docs.docker.com/compose/install/) (Geralmente incluído na instalação do Docker Desktop)
+- [Kubernetes](https://docs.docker.com/desktop/features/kubernetes/) (Ativação no Docker Desktop)
+
+_(Opcional, para desenvolvimento local/contribuição):_
+
+- [Node.js](https://nodejs.org/) (v18 ou superior recomendado)
+- [NPM](https://www.npmjs.com/)
+
+## ⚡ Fluxo de Pedido
+
+```mermaid
+sequenceDiagram
+  participant C as Cliente
+  participant O as Orders Service
+  participant P as Payments Service
+  participant MP as Mercado Pago
+
+  C ->> O: Criar Pedido
+  O -->> C: Pedido Criado (orderId)
+  C ->> O: Adicionar Itens
+  O -->> C: Pedido Atualizado
+  C ->> P: Solicitar Pagamento
+  P -->> O: Obter informações do Pedido
+  O -->> P: Retorna Informações Pedido
+  P ->> MP: Criar Cobrança
+  MP -->> P: Retorna QR Code
+  P -->> C: QR Code Criado
+  C ->> MP: Efetua Pagamento
+  MP ->> P: Webhook Confirmação
+  P ->> O: Pagamento Aprovado
+```
+### 📍 Ordem de execução dos EndPoints
+1. POST `/orders` >> criar pedido
+2. POST `/orders/items` >> adicionar itens
+3. POST `/payments` >> realizar pagamento
+4. GET  `/payments/orders/:orderId` >> obter pagamento (QRCode)
+5. POST `/payments/webhook` >> Atualizar status pagamento e atualizar status pedido (para aguardando preparação ou cancelado)
+6. PUT  `/orders/status` >> atualizar status pedido (na cozinha)
+
+## 🚀 Executando com Kubernetes (Ambiente Local)
+
+### 1. Configurar o `PersistentVolume`
+
+Edite o arquivo `src/k8s/database/pv.yaml`, alterando o valor da propriedade `hostPath.path` para o caminho **absoluto** da pasta local onde o volume persistente será armazenado.
+
+Exemplo:
+
+```yaml
+hostPath:
+  path: '/Users/igorgregorio/Desktop/fiap-postech-11soat/k8s/database/data'
 ```
 
-## Compile and run the project
+> 📌 Certifique-se de que esse caminho exista na máquina onde os containers serão executados.
+
+### 2. Subir os serviços com Kubernetes
+
+Execute o comando:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run kubernets:on
 ```
 
-## Run tests
+Isso iniciará os serviços definidos nos manifests Kubernetes.
+
+### 3. Derrubar os serviços
+
+Para destruir os recursos criados, execute:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run kubernets:off
 ```
 
-## Deployment
+### 4. Arquitetura
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+![Diagrama de arquitetura](./docs/readme/kubernetes.png)
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+> ⚠️ O **PersistentVolume (PV)** **não é excluído automaticamente**.
+> Para removê-lo completamente, é necessário deletar manualmente ou editar o arquivo `pv.yaml`.
+
+## 🚀 Executando com Docker
+
+1.  **Clone o repositório:**
+
+    ```bash
+    git clone https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
+    cd SEU_REPOSITORIO
+    ```
+
+2.  **Inicie os containers:**
+    ```bash
+    docker-compose up --build -d
+    ```
+    - `--build`: Garante que as imagens Docker sejam construídas (necessário na primeira vez ou após mudanças no Dockerfile).
+    - `-d`: Executa os containers em modo detached (background).
+
+**O que acontece com `docker-compose up`?**
+
+- Constrói a imagem Docker da aplicação NestJS (se ainda não existir ou se o `Dockerfile` mudou).
+- Inicia o container da aplicação.
+- Inicia o container do banco de dados PostgreSQL.
+- **(Importante)** Aplica as migrações do Prisma automaticamente (geralmente configurado no `entrypoint` do Dockerfile ou no `command` do serviço no `docker-compose.yml` para executar `npx prisma migrate deploy`).
+- Expõe a porta da aplicação (definida no `.env` ou `docker-compose.yml`, geralmente `3000`).
+
+A aplicação estará disponível em `http://localhost:3000` (ou a porta configurada).
+
+**Para parar os containers:**
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+docker-compose down
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 🛠️ Desenvolvimento Local (Alternativa)
 
-## Resources
+Se você preferir rodar a aplicação diretamente na sua máquina (fora do Docker) para desenvolvimento ou depuração:
 
-Check out a few resources that may come in handy when working with NestJS:
+Instale as dependências:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npm install
+# ou
+yarn install
+```
 
-## Support
+Certifique-se que o Banco de Dados está rodando: Você pode usar o container do Postgres iniciado com o Docker Compose (docker-compose up -d postgres_db) ou ter uma instância local do PostgreSQL. Ajuste a DATABASE_URL no seu arquivo .env para apontar para localhost se estiver usando uma instância local fora do Docker Compose.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### .env (Exemplo para DB local fora do Docker)
 
-## Stay in touch
+```bash
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/rms?schema=public"
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Execute as migrações do Prisma manualmente:
 
-## License
+```bash
+npx prisma migrate dev
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-# microservice-order
+Inicie a aplicação em modo de desenvolvimento:
+
+```bash
+npm run start:dev
+```
+
+A aplicação estará disponível em http://localhost:3000 (ou a porta definida em .env).
+
+## ✅ Rodando os Testes (Ambiente Local)
+
+Certifique-se de ter as dependências de desenvolvimento instaladas (npm install ou yarn install).
+
+Testes Unitários:
+
+```bash
+npm run test
+```
+
+Testes com Cobertura (se configurados):
+
+```bash
+npm run test:cov
+```
+
+Testes End-to-End (se configurados):
+
+Geralmente requerem um banco de dados de teste. Verifique a configuração específica dos testes E2E.
+
+```bash
+npm run test:e2e
+```
+
+## 📄 Documentação da API (Swagger)
+
+A documentação da API gerada pelo Swagger pode ser acessada em:
+
+executando com kubernets:
+http://localhost:31000/api
+
+executando com docker ou localmente:
+http://localhost:3000/api
+
+## 🤝 Contribuição
+
+Contribuições são bem-vindas! Por favor, abra uma issue ou envie um pull request.
+
+## 📜 Licença
+
+Este projeto está licenciado sob a Licença MIT. Veja o arquivo LICENSE para mais detalhes.

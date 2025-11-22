@@ -1,0 +1,59 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model CustomerOrder {
+  customerId String @map("customer_id")
+  orderId    String @map("order_id")
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@id([customerId, orderId])
+  @@index([customerId])
+  @@index([orderId])
+  @@map("customer_order")
+}
+
+enum OrderStatus {
+  AWAITING
+  AWAITING_PAYMENT
+  TO_PREPARE
+  IN_PREPARE
+  FINISHED
+  PICKUPED
+  CANCELLED
+}
+
+model Order {
+  id        String          @id @default(uuid())
+  total     Decimal
+  status    OrderStatus
+  createdAt DateTime        @map("created_at")
+  updatedAt DateTime        @map("updated_at")
+  customers CustomerOrder[]
+  items     OrderItem[]
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  orderId  String  @map("order_id")
+  itemId   String  @map("item_id")
+  price    Decimal
+  quantity Int
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@id([orderId, itemId])
+  @@index([orderId])
+  @@index([itemId])
+  @@map("order_item")
+}
