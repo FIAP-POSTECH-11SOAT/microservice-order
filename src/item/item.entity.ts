@@ -14,7 +14,7 @@ export class Item {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
-  private constructor(props: Partial<Item>) {
+  constructor(props: Partial<Item>) {
     Object.assign(this, props);
   }
 }

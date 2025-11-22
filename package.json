@@ -22,12 +22,14 @@
     "kubernets:off": "kubectl delete -f k8s/app/hpa.yaml && kubectl delete -f k8s/app/service.yaml && kubectl delete -f k8s/app/deployment.yaml && kubectl delete -f k8s/app/configmap.yaml && kubectl delete -f k8s/app/secrets.yaml && kubectl delete -f k8s/database/storageclass.yaml && kubectl delete -f k8s/database/secrets.yaml && kubectl delete -f k8s/database/statefulset.yaml && kubectl delete -f k8s/database/service.yaml"
   },
   "dependencies": {
+    "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.1.5",
     "@prisma/client": "^6.8.2",
+    "axios": "^1.13.2",
     "cpf-cnpj-validator": "^1.0.3",
     "dotenv": "^16.5.0",
     "mercadopago": "^2.7.0",
