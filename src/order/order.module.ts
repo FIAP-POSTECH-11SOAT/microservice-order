@@ -22,9 +22,12 @@ import { UpdateStatusPort } from './domain/ports/update-status.port';
 import { UpdateStatusUseCase } from './domain/use-cases/update-status/update-status.service';
 import { ItemsRepository } from '../item/items.repository';
 import { PaymentsRepository } from '../payment/payments.repository';
+import { ItemsGateway } from '../item/items.gateway';
+import { HttpModule } from '@nestjs/axios';
+import { PaymentsGateway } from '../payment/payments.gateway';
 
 @Module({
-  imports: [],
+  imports: [HttpModule],
   controllers: [
     GetOrdersByFilterController,
     GetFullOrderByIdController,
@@ -34,8 +37,14 @@ import { PaymentsRepository } from '../payment/payments.repository';
     DeleteOrderItemController,
   ],
   providers: [
-    ItemsRepository,
-    PaymentsRepository,
+    {
+      provide: ItemsRepository,
+      useClass: ItemsGateway,
+    },
+    {
+      provide: PaymentsRepository,
+      useClass: PaymentsGateway,
+    },
     {
       provide: GetOrdersByFilterPort,
       useClass: GetOrdersByFilterUseCase,
